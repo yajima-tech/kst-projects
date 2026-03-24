@@ -6,170 +6,154 @@
 <title>ニューズベース 案件管理</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<!-- Google Identity Services -->
-<script src="https://accounts.google.com/gsi/client"></script>
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
-  --blue:#2563eb; --blue-l:#eff6ff; --blue-t:#1d4ed8;
-  --green:#16a34a; --green-l:#f0fdf4; --green-t:#15803d;
-  --amber:#d97706; --amber-l:#fffbeb; --amber-t:#b45309;
-  --red:#ef4444; --red-l:#fef2f2; --red-t:#b91c1c;
-  --purple:#9333ea; --purple-l:#faf5ff; --purple-t:#7e22ce;
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --blue:#2563eb;--blue-l:#eff6ff;--blue-t:#1d4ed8;
+  --green:#16a34a;--green-l:#f0fdf4;--green-t:#15803d;
+  --amber:#d97706;--amber-l:#fffbeb;--amber-t:#b45309;
+  --red:#ef4444;--red-l:#fef2f2;--red-t:#b91c1c;
+  --purple:#9333ea;--purple-l:#faf5ff;--purple-t:#7e22ce;
   --gray:#6b7280;
-  --border:#e5e7eb; --border-l:#f3f4f6;
-  --text:#111827; --text2:#6b7280; --text3:#9ca3af;
-  --bg:#fff; --bg2:#f9fafb;
+  --border:#e5e7eb;--border-l:#f3f4f6;
+  --text:#111827;--text2:#6b7280;--text3:#9ca3af;
+  --bg:#fff;--bg2:#f9fafb;
   --sh:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.04);
   --sh-md:0 4px 16px rgba(0,0,0,.12);
 }
-body { font-family:'Noto Sans JP',sans-serif; background:var(--bg2); color:var(--text); font-size:14px; min-height:100vh; }
+body{font-family:'Noto Sans JP',sans-serif;background:var(--bg2);color:var(--text);font-size:14px;min-height:100vh}
 
-/* ── Header ── */
-.header { background:#fff; border-bottom:1px solid var(--border); position:sticky; top:0; z-index:100; box-shadow:var(--sh); }
-.header-inner { max-width:1400px; margin:0 auto; padding:0 24px; height:56px; display:flex; align-items:center; gap:24px; }
-.logo { display:flex; align-items:center; gap:8px; text-decoration:none; flex-shrink:0; }
-.logo-mark { width:28px; height:28px; background:var(--blue); border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; color:#fff; font-family:'JetBrains Mono',monospace; }
-.logo-text { font-size:14px; font-weight:700; color:var(--text); }
-.nav { display:flex; height:100%; }
-.nav-btn { display:flex; align-items:center; height:100%; padding:0 14px; font-size:13px; color:var(--text2); border:none; border-bottom:2px solid transparent; cursor:pointer; background:none; font-family:'Noto Sans JP',sans-serif; }
-.nav-btn:hover { color:var(--text); }
-.nav-btn.active { color:var(--blue); font-weight:500; border-bottom-color:var(--blue); }
-.header-actions { margin-left:auto; display:flex; align-items:center; gap:8px; }
+/* Header */
+.header{background:#fff;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:var(--sh)}
+.header-inner{max-width:1400px;margin:0 auto;padding:0 24px;height:56px;display:flex;align-items:center;gap:24px}
+.logo{display:flex;align-items:center;gap:8px;text-decoration:none;flex-shrink:0}
+.logo-mark{width:28px;height:28px;background:var(--blue);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;font-family:'JetBrains Mono',monospace}
+.logo-text{font-size:14px;font-weight:700;color:var(--text)}
+.header-actions{margin-left:auto;display:flex;align-items:center;gap:8px}
+.sync-badge{font-size:11px;color:var(--green-t);background:var(--green-l);padding:3px 10px;border-radius:20px;font-family:'JetBrains Mono',monospace;display:flex;align-items:center;gap:4px}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:var(--green)}
+.sync-err{color:var(--red-t);background:var(--red-l)}
 
-/* ── Buttons ── */
-.btn { display:inline-flex; align-items:center; gap:6px; padding:7px 14px; border-radius:7px; font-size:13px; font-weight:500; cursor:pointer; border:none; font-family:'Noto Sans JP',sans-serif; white-space:nowrap; }
-.btn-ghost { background:#fff; color:var(--text2); border:1px solid var(--border); }
-.btn-ghost:hover { background:var(--bg2); }
-.btn-primary { background:var(--blue); color:#fff; }
-.btn-primary:hover { background:#1d4ed8; }
-.btn:disabled { opacity:.5; cursor:not-allowed; }
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:7px;font-size:13px;font-weight:500;cursor:pointer;border:none;font-family:'Noto Sans JP',sans-serif;white-space:nowrap;transition:all .15s}
+.btn-ghost{background:#fff;color:var(--text2);border:1px solid var(--border)}
+.btn-ghost:hover{background:var(--bg2)}
+.btn-primary{background:var(--blue);color:#fff}
+.btn-primary:hover{background:#1d4ed8}
 
-/* ── Main 2カラムレイアウト ── */
-.main { max-width:1400px; margin:0 auto; padding:20px 24px; }
-.two-col { display:grid; grid-template-columns:380px 1fr; gap:16px; align-items:start; }
+/* Main 2-column */
+.main{max-width:1400px;margin:0 auto;padding:20px 24px}
+.two-col{display:grid;grid-template-columns:360px 1fr;gap:16px;align-items:start}
 
-/* ── 左ペイン（案件リスト） ── */
-.list-pane { background:#fff; border:1px solid var(--border); border-radius:10px; box-shadow:var(--sh); overflow:hidden; position:sticky; top:76px; max-height:calc(100vh - 96px); display:flex; flex-direction:column; }
-.list-hdr { padding:12px 14px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
-.list-hdr-title { font-size:13px; font-weight:500; }
-.filter-tabs { display:flex; gap:5px; padding:8px 14px; border-bottom:0.5px solid var(--border); flex-shrink:0; }
-.ftab { padding:3px 10px; border-radius:20px; border:0.5px solid var(--border); background:transparent; color:var(--text2); font-size:11px; cursor:pointer; font-family:'Noto Sans JP',sans-serif; }
-.ftab.on { background:var(--blue-l); border-color:#bfdbfe; color:var(--blue-t); }
-.list-search { padding:8px 14px; border-bottom:0.5px solid var(--border); flex-shrink:0; }
-.list-search input { width:100%; border:0.5px solid var(--border); border-radius:6px; padding:6px 10px; font-size:12px; font-family:'Noto Sans JP',sans-serif; outline:none; background:var(--bg2); color:var(--text); }
-.list-search input:focus { border-color:var(--blue); }
-.rows-wrap { overflow-y:auto; flex:1; }
-.row { padding:10px 14px; border-bottom:0.5px solid var(--border-l); cursor:pointer; transition:background .1s; }
-.row:hover { background:var(--bg2); }
-.row.sel { background:var(--blue-l); border-left:3px solid var(--blue); }
-.row.lost { opacity:.55; }
-.row-name { font-size:12px; font-weight:500; color:var(--text); margin-bottom:4px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-.row-sub { display:flex; justify-content:space-between; align-items:center; }
-.row-client { font-size:10px; color:var(--text3); }
+/* Left pane */
+.list-pane{background:#fff;border:1px solid var(--border);border-radius:10px;box-shadow:var(--sh);overflow:hidden;position:sticky;top:76px;max-height:calc(100vh - 96px);display:flex;flex-direction:column}
+.list-hdr{padding:11px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.list-hdr-title{font-size:13px;font-weight:500}
+.filter-tabs{display:flex;gap:5px;padding:8px 14px;border-bottom:0.5px solid var(--border-l);flex-shrink:0}
+.ftab{padding:3px 10px;border-radius:20px;border:0.5px solid var(--border);background:transparent;color:var(--text2);font-size:11px;cursor:pointer;font-family:'Noto Sans JP',sans-serif}
+.ftab.on{background:var(--blue-l);border-color:#bfdbfe;color:var(--blue-t)}
+.list-search{padding:8px 14px;border-bottom:0.5px solid var(--border-l);flex-shrink:0}
+.list-search input{width:100%;border:0.5px solid var(--border);border-radius:6px;padding:6px 10px;font-size:12px;font-family:'Noto Sans JP',sans-serif;outline:none;background:var(--bg2);color:var(--text)}
+.list-search input:focus{border-color:var(--blue)}
+.rows-wrap{overflow-y:auto;flex:1}
+.row{padding:10px 14px;border-bottom:0.5px solid var(--border-l);cursor:pointer;transition:background .1s}
+.row:hover{background:var(--bg2)}
+.row.sel{background:var(--blue-l);border-left:3px solid var(--blue)}
+.row.lost{opacity:.55}
+.row-name{font-size:12px;font-weight:500;color:var(--text);margin-bottom:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row-sub{display:flex;justify-content:space-between;align-items:center}
+.row-client{font-size:10px;color:var(--text3)}
 
-/* ── 右ペイン（詳細） ── */
-.detail-pane { background:#fff; border:1px solid var(--border); border-radius:10px; box-shadow:var(--sh); overflow:hidden; }
-.detail-hdr { padding:16px 20px 12px; border-bottom:1px solid var(--border); }
-.detail-project { font-size:15px; font-weight:700; color:var(--text); margin-bottom:6px; line-height:1.4; }
-.detail-meta { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
-.detail-tabs { display:flex; border-bottom:1px solid var(--border); padding:0 20px; }
-.dtab { padding:10px 16px; font-size:13px; cursor:pointer; border:none; background:transparent; color:var(--text2); border-bottom:2px solid transparent; margin-bottom:-1px; font-family:'Noto Sans JP',sans-serif; }
-.dtab.on { color:var(--blue); font-weight:500; border-bottom-color:var(--blue); }
-.detail-body { padding:20px; }
-.dpane { display:none; }
-.dpane.on { display:block; }
+/* Right pane */
+.detail-pane{background:#fff;border:1px solid var(--border);border-radius:10px;box-shadow:var(--sh);overflow:hidden}
+.detail-hdr{padding:16px 20px 12px;border-bottom:1px solid var(--border)}
+.detail-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:7px;line-height:1.4}
+.detail-meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.detail-tabs{display:flex;border-bottom:1px solid var(--border);padding:0 20px}
+.dtab{padding:10px 16px;font-size:13px;cursor:pointer;border:none;background:transparent;color:var(--text2);border-bottom:2px solid transparent;margin-bottom:-1px;font-family:'Noto Sans JP',sans-serif}
+.dtab.on{color:var(--blue);font-weight:500;border-bottom-color:var(--blue)}
+.detail-body{padding:20px}
+.dpane{display:none}.dpane.on{display:block}
 
-/* ── 概要タブ ── */
-.info-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px; }
-.info-lbl { font-size:10px; color:var(--text3); margin-bottom:3px; letter-spacing:.05em; text-transform:uppercase; }
-.info-val { font-size:13px; color:var(--text); line-height:1.5; }
-.info-val.mono { font-family:'JetBrains Mono',monospace; font-size:12px; }
-.biz-box { background:var(--bg2); border-radius:7px; padding:12px 14px; font-size:12px; color:var(--text2); line-height:1.8; white-space:pre-wrap; border:0.5px solid var(--border-l); }
+/* Overview tab */
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.info-lbl{font-size:10px;color:var(--text3);margin-bottom:3px;letter-spacing:.05em;text-transform:uppercase}
+.info-val{font-size:13px;color:var(--text);line-height:1.5}
+.info-val.mono{font-family:'JetBrains Mono',monospace;font-size:12px}
+.biz-box{background:var(--bg2);border-radius:7px;padding:12px 14px;font-size:12px;color:var(--text2);line-height:1.8;white-space:pre-wrap;border:0.5px solid var(--border-l)}
 
-/* ── 依頼事項・確認事項タブ ── */
-.item-list { display:flex; flex-direction:column; gap:6px; }
-.item { display:flex; align-items:flex-start; gap:10px; padding:8px 12px; border-radius:7px; font-size:12px; line-height:1.6; border:0.5px solid transparent; }
-.item.req  { background:var(--blue-l);  border-color:#bfdbfe; color:var(--blue-t); }
-.item.pend { background:var(--amber-l); border-color:#fde68a; color:var(--amber-t); }
-.item.done { background:var(--green-l); border-color:#bbf7d0; color:var(--green-t); }
-.item-icon { font-size:12px; flex-shrink:0; margin-top:2px; }
+/* Items */
+.item-list{display:flex;flex-direction:column;gap:6px}
+.item{display:flex;align-items:flex-start;gap:10px;padding:8px 12px;border-radius:7px;font-size:12px;line-height:1.6;border:0.5px solid transparent}
+.item.req{background:var(--blue-l);border-color:#bfdbfe;color:var(--blue-t)}
+.item.pend{background:var(--amber-l);border-color:#fde68a;color:var(--amber-t)}
+.item.done{background:var(--green-l);border-color:#bbf7d0;color:var(--green-t)}
+.item-icon{font-size:12px;flex-shrink:0;margin-top:2px}
+.empty-items{font-size:12px;color:var(--text3);text-align:center;padding:16px;background:var(--bg2);border-radius:7px}
 
-/* ── メール要約タブ ── */
-.sum-box { background:var(--bg2); border-left:3px solid var(--blue); border-radius:0 7px 7px 0; padding:12px 14px; margin-bottom:16px; }
-.sum-meta { font-size:10px; color:var(--text3); font-family:'JetBrains Mono',monospace; margin-bottom:6px; }
-.sum-txt { font-size:13px; color:var(--text2); line-height:1.7; }
-.hist-title { font-size:10px; font-weight:600; color:var(--text3); letter-spacing:.08em; text-transform:uppercase; margin-bottom:10px; padding-bottom:6px; border-bottom:1px solid var(--border); }
-.hist-list { display:flex; flex-direction:column; gap:8px; }
-.hist-item { display:flex; gap:12px; font-size:12px; }
-.hist-date { color:var(--text3); font-family:'JetBrains Mono',monospace; flex-shrink:0; min-width:32px; }
-.hist-text { color:var(--text2); line-height:1.5; }
+/* Summary tab */
+.sum-box{background:var(--bg2);border-left:3px solid var(--blue);border-radius:0 7px 7px 0;padding:12px 14px;margin-bottom:16px}
+.sum-meta{font-size:10px;color:var(--text3);font-family:'JetBrains Mono',monospace;margin-bottom:6px}
+.sum-txt{font-size:13px;color:var(--text2);line-height:1.7}
+.hist-title{font-size:10px;font-weight:600;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.hist-list{display:flex;flex-direction:column;gap:8px}
+.hist-row{display:flex;gap:12px;font-size:12px}
+.hist-date{color:var(--text3);font-family:'JetBrains Mono',monospace;flex-shrink:0;min-width:32px}
+.hist-text{color:var(--text2);line-height:1.5}
 
-/* ── バッジ共通 ── */
-.badge { display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:500; white-space:nowrap; }
-.badge::before { content:''; width:6px; height:6px; border-radius:50%; flex-shrink:0; }
-.badge-blue   { background:var(--blue-l);   color:var(--blue-t);   } .badge-blue::before   { background:var(--blue); }
-.badge-green  { background:var(--green-l);  color:var(--green-t);  } .badge-green::before  { background:var(--green); }
-.badge-amber  { background:var(--amber-l);  color:var(--amber-t);  } .badge-amber::before  { background:var(--amber); }
-.badge-purple { background:var(--purple-l); color:var(--purple-t); } .badge-purple::before { background:var(--purple); }
-.badge-red    { background:var(--red-l);    color:var(--red-t);    } .badge-red::before    { background:var(--red); }
-.badge-gray   { background:#f3f4f6; color:#374151; border:0.5px solid var(--border); } .badge-gray::before { background:var(--gray); }
+/* Badge */
+.badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:500;white-space:nowrap}
+.badge::before{content:'';width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.badge-blue{background:var(--blue-l);color:var(--blue-t)}.badge-blue::before{background:var(--blue)}
+.badge-green{background:var(--green-l);color:var(--green-t)}.badge-green::before{background:var(--green)}
+.badge-amber{background:var(--amber-l);color:var(--amber-t)}.badge-amber::before{background:var(--amber)}
+.badge-red{background:var(--red-l);color:var(--red-t)}.badge-red::before{background:var(--red)}
+.badge-purple{background:var(--purple-l);color:var(--purple-t)}.badge-purple::before{background:var(--purple)}
+.badge-gray{background:#f3f4f6;color:#374151;border:0.5px solid var(--border)}.badge-gray::before{background:var(--gray)}
 
-/* ── 期限 ── */
-.dl { font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:500; white-space:nowrap; }
-.dl.overdue { color:var(--red-t); }
-.dl.near    { color:var(--amber-t); font-weight:700; }
-.dl.ok      { color:var(--text2); }
-.dl.none    { color:var(--text3); }
+/* DL */
+.dl{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;white-space:nowrap}
+.dl.overdue{color:var(--red-t)}.dl.near{color:var(--amber-t);font-weight:700}.dl.ok{color:var(--text2)}.dl.none{color:var(--text3)}
 
-/* ── 編集モーダル ── */
-.modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.4); z-index:200; display:none; align-items:center; justify-content:center; padding:16px; }
-.modal-overlay.open { display:flex; }
-.modal { background:#fff; border-radius:12px; width:100%; max-width:640px; max-height:90vh; overflow-y:auto; box-shadow:var(--sh-md); }
-.modal-header { display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid var(--border); position:sticky; top:0; background:#fff; z-index:1; }
-.modal-title { font-size:15px; font-weight:700; }
-.modal-close { background:none; border:none; font-size:18px; cursor:pointer; color:var(--text3); padding:4px; }
-.modal-body { padding:20px; }
-.form-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px; }
-.form-group { display:flex; flex-direction:column; gap:4px; }
-.form-label { font-size:12px; font-weight:500; color:var(--text2); }
-.form-input, .form-select, .form-textarea { border:1px solid var(--border); border-radius:6px; padding:8px 10px; font-size:13px; font-family:'Noto Sans JP',sans-serif; color:var(--text); outline:none; background:#fff; }
-.form-input:focus, .form-select:focus, .form-textarea:focus { border-color:var(--blue); }
-.form-textarea { min-height:80px; resize:vertical; }
-.form-footer { display:flex; justify-content:flex-end; gap:8px; padding-top:4px; }
+/* Edit modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.open{display:flex}
+.modal{background:#fff;border-radius:12px;width:100%;max-width:640px;max-height:90vh;overflow-y:auto;box-shadow:var(--sh-md)}
+.modal-header{display:flex;align-items:center;justify-content:space-between;padding:18px 24px 14px;border-bottom:1px solid var(--border);position:sticky;top:0;background:#fff}
+.modal-title{font-size:16px;font-weight:700}
+.modal-close{width:28px;height:28px;border-radius:6px;border:none;background:var(--bg2);color:var(--text2);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center}
+.modal-close:hover{background:var(--border)}
+.modal-body{padding:20px 24px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+.form-group{display:flex;flex-direction:column;gap:5px}
+.form-label{font-size:12px;font-weight:500;color:var(--text2)}
+.form-input,.form-select,.form-textarea{border:1px solid var(--border);border-radius:6px;padding:8px 10px;font-size:13px;font-family:'Noto Sans JP',sans-serif;color:var(--text);outline:none;background:#fff;width:100%}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--blue)}
+.form-textarea{min-height:80px;resize:vertical}
+.form-footer{display:flex;justify-content:flex-end;gap:8px;padding-top:4px;border-top:1px solid var(--border)}
 
-/* ── Empty / Toast ── */
-.empty { padding:48px 24px; text-align:center; color:var(--text3); }
-.toast { position:fixed; bottom:24px; right:24px; background:#111827; color:#fff; padding:10px 18px; border-radius:8px; font-size:13px; z-index:500; display:none; box-shadow:var(--sh-md); }
-.toast.show { display:block; animation:fadeup .2s ease; }
-@keyframes fadeup { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+/* Toast */
+.toast{position:fixed;bottom:24px;right:24px;background:#111827;color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;z-index:500;display:none;box-shadow:var(--sh-md)}
+.toast.show{display:block}
 
-@media(max-width:1000px) { .two-col { grid-template-columns:320px 1fr; } }
-@media(max-width:768px)  { .two-col { grid-template-columns:1fr; } .list-pane { position:static; max-height:300px; } }
+/* Empty state */
+.detail-empty{padding:60px 20px;text-align:center;color:var(--text3);font-size:13px}
+
+@media(max-width:900px){.two-col{grid-template-columns:1fr}.list-pane{position:static;max-height:280px}}
 </style>
 </head>
 <body>
 
-<!-- Header -->
 <header class="header">
   <div class="header-inner">
     <a class="logo" href="#">
       <div class="logo-mark">NB</div>
       <span class="logo-text">ニューズベース案件管理</span>
     </a>
-    <nav class="nav">
-      <button class="nav-btn active" onclick="openEdit(null)">＋ 新規作成</button>
-    </nav>
     <div class="header-actions">
-      <div id="authArea">
-        <button class="btn btn-primary" id="loginBtn" onclick="googleSignIn()" style="display:none">Googleでログイン</button>
-        <div id="userInfo" style="display:none;align-items:center;gap:8px">
-          <span id="userName" style="font-size:12px;color:var(--text2)"></span>
-          <button class="btn btn-ghost" onclick="gmailSync()" id="syncBtn">📩 Gmail同期</button>
-          <button class="btn btn-ghost" onclick="googleSignOut()" style="font-size:12px">ログアウト</button>
-        </div>
-      </div>
+      <span class="sync-badge" id="syncBadge"><span class="sync-dot" id="syncDot"></span><span id="syncText">接続中...</span></span>
       <button class="btn btn-ghost" onclick="exportCSV()">↓ CSV出力</button>
+      <button class="btn btn-primary" onclick="openEdit(null)">＋ 新規作成</button>
     </div>
   </div>
 </header>
@@ -181,7 +165,7 @@ body { font-family:'Noto Sans JP',sans-serif; background:var(--bg2); color:var(-
     <div class="list-pane">
       <div class="list-hdr">
         <span class="list-hdr-title">案件一覧</span>
-        <span style="font-size:11px;color:var(--text3)" id="countLabel"></span>
+        <span style="font-size:11px;color:var(--text3)" id="countLabel">—</span>
       </div>
       <div class="filter-tabs">
         <button class="ftab on" onclick="setFilter('all',this)">すべて</button>
@@ -189,15 +173,17 @@ body { font-family:'Noto Sans JP',sans-serif; background:var(--bg2); color:var(-
         <button class="ftab" onclick="setFilter('lost',this)">失注</button>
       </div>
       <div class="list-search">
-        <input type="text" placeholder="検索..." id="listSearch" oninput="renderList()">
+        <input type="text" placeholder="案件名・クライアントで検索..." id="listSearch" oninput="renderList()">
       </div>
-      <div class="rows-wrap" id="rowsWrap"></div>
+      <div class="rows-wrap" id="rowsWrap">
+        <div class="detail-empty">Firebaseに接続中...</div>
+      </div>
     </div>
 
     <!-- 右ペイン：詳細 -->
-    <div class="detail-pane" id="detailPane">
+    <div class="detail-pane">
       <div class="detail-hdr">
-        <div class="detail-project" id="detailTitle">案件を選択してください</div>
+        <div class="detail-title" id="detailTitle">案件を選択してください</div>
         <div class="detail-meta" id="detailMeta"></div>
       </div>
       <div class="detail-tabs">
@@ -207,9 +193,7 @@ body { font-family:'Noto Sans JP',sans-serif; background:var(--bg2); color:var(-
         <button class="dtab" onclick="switchDetailTab('summary',this)">メール要約</button>
       </div>
       <div class="detail-body">
-        <div class="dpane on" id="dpane-overview">
-          <div class="empty">左の一覧から案件を選択してください</div>
-        </div>
+        <div class="dpane on" id="dpane-overview"><div class="detail-empty">左の案件一覧から案件を選択してください</div></div>
         <div class="dpane" id="dpane-requests"></div>
         <div class="dpane" id="dpane-pending"></div>
         <div class="dpane" id="dpane-summary"></div>
@@ -219,456 +203,43 @@ body { font-family:'Noto Sans JP',sans-serif; background:var(--bg2); color:var(-
   </div>
 </main>
 
-<!-- Edit Modal -->
-<div class="modal-overlay" id="editModal" onclick="closeModalOutside(event,'editModal')">
+<!-- 編集モーダル -->
+<div class="modal-overlay" id="editModal" onclick="if(event.target===this)closeModal('editModal')">
   <div class="modal">
     <div class="modal-header">
-      <div class="modal-title" id="editTitle">案件を編集</div>
+      <span class="modal-title" id="editTitle">案件を編集</span>
       <button class="modal-close" onclick="closeModal('editModal')">✕</button>
     </div>
     <div class="modal-body" id="editBody"></div>
   </div>
 </div>
 
-<!-- Gmail Sync Modal -->
-<div class="modal-overlay" id="syncModal" onclick="closeModalOutside(event,'syncModal')">
-  <div class="modal" style="max-width:720px">
-    <div class="modal-header">
-      <div class="modal-title">Gmail同期 - 案件候補</div>
-      <button class="modal-close" onclick="closeModal('syncModal')">✕</button>
-    </div>
-    <div class="modal-body" id="syncBody"></div>
-  </div>
-</div>
-
 <div class="toast" id="toast"></div>
 
-<script>
-// ─────────────────────────────────────────
-// Google Identity Services (OAuth 2.0)
-// ─────────────────────────────────────────
-const GOOGLE_CLIENT_ID = "433486255319-mhaqmnuvbtilrdus6p0dt5r30eb3bk1e.apps.googleusercontent.com";
-const GMAIL_SCOPES = "https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email";
+<!-- Firebase SDK -->
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js';
+import { getFirestore, collection, onSnapshot, doc, updateDoc, addDoc, deleteDoc, query, orderBy } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js';
 
-let gmailAccessToken = null;
-let tokenClient = null;
-let currentUser = null;
+const firebaseConfig = {
+  apiKey: "AIzaSyCRGRClqzoraxXju9wDmqU1CVJzCO85Bek",
+  authDomain: "newsbase-app-2026.firebaseapp.com",
+  projectId: "newsbase-app-2026",
+  storageBucket: "newsbase-app-2026.appspot.com",
+  messagingSenderId: "433486255319",
+  appId: "1:433486255319:web:2c29785f9a17eaab318c92"
+};
 
-window.addEventListener('load', () => {
-  tokenClient = google.accounts.oauth2.initTokenClient({
-    client_id: GOOGLE_CLIENT_ID,
-    scope: GMAIL_SCOPES,
-    callback: handleTokenResponse,
-  });
-  document.getElementById('loginBtn').style.display = '';
-});
+const app = initializeApp(firebaseConfig);
+const db  = getFirestore(app);
 
-function handleTokenResponse(response) {
-  if (response.error) { console.error('OAuth error:', response); return; }
-  gmailAccessToken = response.access_token;
-  fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
-    headers: { Authorization: `Bearer ${gmailAccessToken}` }
-  })
-  .then(r => r.json())
-  .then(user => {
-    currentUser = user;
-    document.getElementById('loginBtn').style.display = 'none';
-    document.getElementById('userInfo').style.display = 'flex';
-    document.getElementById('userName').textContent = user.name || user.email;
-    toast('✓ ログインしました');
-  });
-}
-
-function googleSignIn() { tokenClient.requestAccessToken(); }
-
-function googleSignOut() {
-  if (gmailAccessToken) google.accounts.oauth2.revoke(gmailAccessToken);
-  gmailAccessToken = null; currentUser = null;
-  document.getElementById('loginBtn').style.display = '';
-  document.getElementById('userInfo').style.display = 'none';
-  toast('ログアウトしました');
-}
-
-// ─────────────────────────────────────────
-// Gmail Sync
-// ─────────────────────────────────────────
-async function getGmailToken() {
-  if (gmailAccessToken) return gmailAccessToken;
-  return new Promise((resolve, reject) => {
-    tokenClient.callback = (response) => {
-      if (response.error) { reject(new Error(response.error)); return; }
-      gmailAccessToken = response.access_token;
-      resolve(gmailAccessToken);
-    };
-    tokenClient.requestAccessToken();
-  });
-}
-
-async function gmailSync() {
-  const syncBtn = document.getElementById('syncBtn');
-  syncBtn.disabled = true;
-  syncBtn.textContent = '⏳ 同期中...';
-  try {
-    const token = await getGmailToken();
-    const query = encodeURIComponent('from:newsbase.co.jp OR subject:ニューズベース newer_than:60d');
-    const listRes = await fetch(
-      `https://www.googleapis.com/gmail/v1/users/me/messages?q=${query}&maxResults=20`,
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
-    if (!listRes.ok) {
-      if (listRes.status === 401) { gmailAccessToken = null; throw new Error('トークンが期限切れです。再度ログインしてください。'); }
-      throw new Error('Gmailの取得に失敗しました (HTTP ' + listRes.status + ')');
-    }
-    const listData = await listRes.json();
-    const messageIds = listData.messages || [];
-    if (messageIds.length === 0) { toast('新しいメールはありませんでした'); return; }
-
-    const messages = [];
-    for (let i = 0; i < messageIds.length; i += 5) {
-      const batch = messageIds.slice(i, i + 5);
-      const results = await Promise.all(batch.map(async ({ id }) => {
-        const res = await fetch(
-          `https://www.googleapis.com/gmail/v1/users/me/messages/${id}?format=full`,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-        if (!res.ok) return null;
-        return res.json();
-      }));
-      messages.push(...results.filter(Boolean));
-    }
-
-    const candidates = messages.map(msg => {
-      const headers = msg.payload?.headers || [];
-      const getHeader = name => (headers.find(h => h.name === name) || {}).value || '';
-      const subject = getHeader('Subject');
-      const from = getHeader('From');
-      const date = getHeader('Date');
-      let body = '';
-      if (msg.payload?.body?.data) {
-        body = atob(msg.payload.body.data.replace(/-/g, '+').replace(/_/g, '/'));
-      } else if (msg.payload?.parts) {
-        const textPart = msg.payload.parts.find(p => p.mimeType === 'text/plain');
-        if (textPart?.body?.data) body = atob(textPart.body.data.replace(/-/g, '+').replace(/_/g, '/'));
-      }
-      const parsed = parseGmailBody(subject, body, from, date);
-      return { threadId: msg.threadId, messageId: msg.id, subject, from, date, body, parsed };
-    });
-
-    const existingThreads = new Set(projects.map(p => p.gmailThreadId).filter(Boolean));
-    const newCandidates = candidates.filter(c => !existingThreads.has(c.threadId));
-    showSyncResults(newCandidates, candidates.length);
-  } catch (err) {
-    console.error('Gmail sync error:', err);
-    toast('⚠ ' + err.message);
-  } finally {
-    syncBtn.disabled = false;
-    syncBtn.textContent = '📩 Gmail同期';
-  }
-}
-
-function parseGmailBody(subject, body, from, date) {
-  const result = { name: '', date: '', venue: '', biz: '', dl: '', requests: [], pending_items: [], latest_summary: '', latest_sender: '', latest_email_date: '' };
-
-  // イベント名
-  const namePatterns = [/(?:イベント名|催事名|案件名|件名)[：:]\s*(.+)/, /(?:【(.+?)】)/];
-  for (const p of namePatterns) {
-    const m = body.match(p) || subject.match(p);
-    if (m) { result.name = m[1].trim(); break; }
-  }
-  if (!result.name && subject) result.name = subject.replace(/^(?:Re:|Fwd:|FW:)\s*/gi, '').trim();
-
-  // 開催日
-  const dateMatch = body.match(/(?:開催日|日程|日時)[：:]\s*(.+?)(?:\n|$)/);
-  if (dateMatch) result.date = dateMatch[1].trim();
-
-  // 会場
-  const venueMatch = body.match(/(?:会場|開催場所|場所|venue)[：:]\s*(.+?)(?:\n|$)/i);
-  if (venueMatch) result.venue = venueMatch[1].trim();
-
-  // 業務内容
-  const workMatch = body.match(/(?:与件|依頼事項|発注内容|業務内容|依頼内容)[：:]\s*([\s\S]+?)(?:\n\n|\n(?=[^\s]))/);
-  if (workMatch) result.biz = workMatch[1].trim();
-
-  // 見積期限
-  const dlPatterns = [
-    /(?:見積.*?期限|提出期限|回答期限|〆切|締切)[：:]\s*(\d{1,2})[\/月](\d{1,2})[日]?/,
-    /(\d{1,2})[\/月](\d{1,2})[日]?\s*まで(?:に|の)/,
-  ];
-  for (const p of dlPatterns) {
-    const m = body.match(p);
-    if (m) {
-      const month = parseInt(m[1]), day = parseInt(m[2]), year = new Date().getFullYear();
-      result.dl = `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-      break;
-    }
-  }
-
-  // 依頼事項
-  const lines = body.split('\n');
-  let inSection = false;
-  for (const line of lines) {
-    const t = line.trim();
-    if (t.match(/[■●▼].*(依頼|お願い|発注|ご確認)/)) inSection = true;
-    if (inSection && t.startsWith('・') && t.length > 3) result.requests.push(t.replace(/^・/, '').trim());
-    if (t === '' && inSection) inSection = false;
-  }
-  const extras = body.match(/[^。\n]{5,50}(?:をお願いいたします|いただけますと幸い)/g) || [];
-  for (const e of extras.slice(0, 5)) {
-    if (!result.requests.includes(e.trim())) result.requests.push(e.trim());
-  }
-
-  // 確認事項
-  const pendingLines = body.match(/[^。\n]{5,60}(?:未定|確認中|調整中|検討中|お待ち|結果待ち)/g) || [];
-  for (const l of pendingLines.slice(0, 6)) result.pending_items.push({ done: false, text: l.trim() });
-
-  // 要約
-  const summaryLines = body.split('\n').filter(l => {
-    const t = l.trim();
-    return t.length > 10 && !t.startsWith('>') && !t.startsWith('--') && !t.includes('@') && !t.includes('〒') && !t.includes('TEL');
-  }).slice(0, 6).join(' ');
-  result.latest_summary = summaryLines.slice(0, 200);
-
-  // 送信者名・日付
-  const senderMatch = from && from.match(/"?([^"<]+)"?\s*</);
-  result.latest_sender = senderMatch ? senderMatch[1].trim() : (from || '').split('@')[0];
-  try { result.latest_email_date = new Date(date).toISOString().slice(0, 10); } catch(e) {}
-
-  return result;
-}
-
-function showSyncResults(candidates, totalFetched) {
-  const body = document.getElementById('syncBody');
-  if (candidates.length === 0) {
-    body.innerHTML = `<div style="text-align:center;padding:24px;color:var(--text2)">
-      <p style="font-size:18px;margin-bottom:8px">📭</p>
-      <p>${totalFetched}件のメールを確認しましたが、新規案件候補はありませんでした。</p>
-      <p style="font-size:12px;margin-top:8px">すでに取り込み済みか、該当メールがありません。</p>
-    </div>`;
-    document.getElementById('syncModal').classList.add('open');
-    return;
-  }
-  body.innerHTML = `
-    <p style="margin-bottom:16px;color:var(--text2)">${totalFetched}件のメールから <strong>${candidates.length}件</strong> の新規案件候補が見つかりました。</p>
-    <div id="candidateList">
-      ${candidates.map((c, i) => `
-        <div style="border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:8px">
-          <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
-            <input type="checkbox" class="candidate-check" data-index="${i}" checked>
-            <strong>${esc(c.parsed.name || c.subject)}</strong>
-          </label>
-          <div style="font-size:12px;color:var(--text2);margin-top:4px;padding-left:24px">
-            From: ${esc(c.from)}
-            ${c.parsed.venue ? ' ｜ 会場: ' + esc(c.parsed.venue) : ''}
-            ${c.parsed.date  ? ' ｜ 日程: ' + esc(c.parsed.date)  : ''}
-            ${c.parsed.dl    ? ' ｜ 期限: ' + esc(c.parsed.dl)    : ''}
-          </div>
-        </div>`).join('')}
-    </div>
-    <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px">
-      <button class="btn btn-ghost" onclick="closeModal('syncModal')">キャンセル</button>
-      <button class="btn btn-primary" onclick="importCandidates()">✓ 選択した案件を取り込む</button>
-    </div>`;
-  window._syncCandidates = candidates;
-  document.getElementById('syncModal').classList.add('open');
-}
-
-function importCandidates() {
-  const checks = document.querySelectorAll('.candidate-check:checked');
-  const candidates = window._syncCandidates;
-  let imported = 0;
-  checks.forEach(chk => {
-    const idx = parseInt(chk.dataset.index);
-    const c = candidates[idx];
-    if (!c) return;
-    projects.push({
-      id: 'gmail-' + Date.now() + '-' + idx,
-      name: c.parsed.name || c.subject,
-      client: '', contact: '', date: c.parsed.date || '', prepDate: '',
-      venue: c.parsed.venue || '', venueDetail: '',
-      biz: c.parsed.biz || '', dl: c.parsed.dl || '', dlNote: '',
-      status: '見積依頼受領', estStatus: '未提出',
-      note: 'Gmail同期で取り込み（' + new Date().toLocaleDateString('ja-JP') + '）\nスレッドID: ' + c.threadId,
-      gmailThreadId: c.threadId,
-      requests: c.parsed.requests || [],
-      pending_items: c.parsed.pending_items || [],
-      latest_summary: c.parsed.latest_summary || '',
-      latest_sender: c.parsed.latest_sender || '',
-      latest_email_date: c.parsed.latest_email_date || '',
-      updatedAt: new Date().toLocaleDateString('ja-JP',{year:'numeric',month:'2-digit',day:'2-digit'}).replace(/\//g,'-')
-    });
-    imported++;
-  });
-  if (imported > 0) { saveData(); renderList(); }
-  closeModal('syncModal');
-  toast(`✓ ${imported}件の案件を取り込みました`);
-}
-
-// ─────────────────────────────────────────
-// DATA
-// ─────────────────────────────────────────
-const DEFAULT_DATA = [
-  {
-    id: "rsj-2026",
-    name: "RSJ Technology Symposium 2026",
-    client: "ローデ・シュワルツ・ジャパン",
-    contact: "瀬津幸太",
-    date: "2026-05-22", prepDate: "2026-05-21",
-    venue: "赤坂インターシティコンファレンス",
-    venueDetail: "6会場（the Air 545㎡含む）拘束: 設営 17:00〜21:00 / 本番 7:00〜21:00 来場予定: 700名",
-    biz: "進行D×6・AD×12・ST×12、収録（カメラ×6・編集×6会場）、サテライト配信1会場（午前）",
-    dl: "2026-03-18", dlNote: "本日期限。可能な限り本日中に提出。",
-    status: "詳細確認中", estStatus: "未提出",
-    note: "英語対応は不要（単価のみ確認中）。設営日不要。会場オペレーター非常駐のため追加手配必要。",
-    requests: ["見積書の提出（3/18まで）", "ST増員対応可否の確認"],
-    pending_items: [{ done: false, text: "英語対応の単価確認中" }, { done: false, text: "会場オペレーター手配調整中" }],
-    latest_summary: "RSJ Technology Symposium 2026の見積依頼。6会場同時進行で進行D×6・AD×12・ST×12が必要。英語対応の単価のみ確認中。",
-    latest_sender: "瀬津幸太", latest_email_date: "2026-03-18",
-    updatedAt: "2026-03-18"
-  },
-  {
-    id: "stech-2026",
-    name: "STech I Forum 2026",
-    client: "双日テックイノベーション",
-    contact: "佐藤奈緒",
-    date: "2026-11-12", prepDate: "2026-11-11",
-    venue: "TAKANAWA GATEWAY Convention Center（地下2階）",
-    venueDetail: "3トラック構成。基調講演: Link PILLAR A（400席）/ 分科会②: Link PILLAR C（400席）/ 分科会③: Room1（100席）/ 展示: Link PILLAR B。作業時間 9:00〜21:00",
-    biz: "進行統括×1・D×3・AD×8、サテライト配信（基調講演）、Zoom配信、収録・アーカイブ、編集（MP4 FHD）",
-    dl: "2026-03-25", dlNote: "先方提案日: 3/27。24〜25日頃までに提出要。",
-    status: "見積依頼受領", estStatus: "未提出",
-    note: "コンペ案件。RFP情報あり（関係者限）。カメラ台数・画面構成は主催者確認中。納品: イベント後2〜3週間以内、MP4 FHD、セッション別切り出し。",
-    requests: ["見積書の提出（3/25まで）", "カメラ台数・機材構成の提案"],
-    pending_items: [{ done: false, text: "カメラ台数・画面構成は主催者確認中" }, { done: false, text: "コンペ結果待ち" }],
-    latest_summary: "STech I Forum 2026のコンペ案件。3トラック構成で来場700〜1000名。3/27先方提案予定のため3/25までに見積提出要。",
-    latest_sender: "佐藤奈緒", latest_email_date: "2026-03-18",
-    updatedAt: "2026-03-18"
-  },
-  {
-    id: "ana-2026",
-    name: "2026年度 ANA入社式",
-    client: "ANA（全日本空輸）",
-    contact: "長﨑いずみ",
-    date: "2026-04-01", prepDate: "2026-03-31",
-    venue: "ANA格納庫",
-    venueDetail: "入館申請必要。車両搬入不要（台車搬入）。スタッフ名簿・身分証提出済み。",
-    biz: "進行・運営スタッフ手配、仮設トイレ備品手配（トイレ用ごみ箱・サニタリーBOX等）、申請書類対応",
-    dl: "", dlNote: "発注済み。見積は承認済みで進行中。",
-    status: "受注済み・準備中", estStatus: "提出済み",
-    note: "仮設トイレ備品: サニタリーBOX 50個（発注数2）など確定済み。宿泊費はKST手配・請求形式。",
-    requests: ["スタッフ名簿・身分証の提出", "仮設トイレ備品の発注"],
-    pending_items: [{ done: true, text: "スタッフ名簿提出済み" }, { done: false, text: "当日備品搬入ルート確認中" }],
-    latest_summary: "2026年度ANA入社式。発注済みで準備進行中。仮設トイレ備品確定済み。宿泊費はKST手配。",
-    latest_sender: "長﨑いずみ", latest_email_date: "2026-03-10",
-    updatedAt: "2026-03-18"
-  },
-  {
-    id: "sansan-info-2026",
-    name: "情報システムCAMP（Sansan）",
-    client: "Sansan",
-    contact: "田澤健一",
-    date: "2026-04-22", prepDate: "",
-    venue: "詳細調整中",
-    venueDetail: "4/22（水）・4/23（木）2日間。3月中旬までに配信・進行周りを確定予定。",
-    biz: "配信・進行オペレーター（D/ADは別会社担当）",
-    dl: "", dlNote: "正式受注済み。詳細詰め中。",
-    status: "受注済み・準備中", estStatus: "提出済み",
-    note: "Slack招待済み。巻きで進める方針。進行D/ADは別会社のため、配信・オペレーターのみ対応。",
-    requests: ["配信・オペレーター手配の確定"],
-    pending_items: [{ done: false, text: "会場詳細調整中" }, { done: false, text: "進行スケジュール確認中" }],
-    latest_summary: "情報システムCAMP。正式受注済みで詳細詰め中。Slack招待済み。配信・オペレーターのみ対応。",
-    latest_sender: "田澤健一", latest_email_date: "2026-03-15",
-    updatedAt: "2026-03-18"
-  },
-  {
-    id: "kensetsu-dxcamp",
-    name: "建設業DXCAMP",
-    client: "Sansan",
-    contact: "太田優希",
-    date: "2026-08-01", prepDate: "",
-    venue: "TODAホール（ホールAのみ）",
-    venueDetail: "日程は8月、詳細未定。前回実績: オペレーター2名（登壇スライド管理・進行スライド管理）。",
-    biz: "機材テクニカル、TD×1・オペレーター×2名、PC・スイッチャー・計時等",
-    dl: "2026-03-12", dlNote: "見積提出済み。先方引合い中（結果待ち）。",
-    status: "見積提出済み・引合い中", estStatus: "提出済み",
-    note: "現在引合い状態。結果が出次第連絡予定。",
-    requests: ["見積書の提出（完了）"],
-    pending_items: [{ done: false, text: "先方引合い中・結果待ち" }],
-    latest_summary: "建設業DXCAMP。3/12に見積提出済み。先方引合い中で結果待ちの状態。",
-    latest_sender: "太田優希", latest_email_date: "2026-03-12",
-    updatedAt: "2026-03-18"
-  },
-  {
-    id: "yakk-ap-2026",
-    name: "YKK AP 社内イベント（配信業務）",
-    client: "YKK AP",
-    contact: "高橋直樹",
-    date: "", prepDate: "",
-    venue: "【東京】YKK 60ビル（墨田区亀沢）【富山】YKK AP R&Dセンター（黒部市）",
-    venueDetail: "東京・富山の2会場同時対応。",
-    biz: "映像オペレーター、リアルタイム配信、アーカイブ録画、機材持込",
-    dl: "2026-03-19", dlNote: "急なご依頼。本日翌日中に提出要。",
-    status: "見積作成中", estStatus: "未提出",
-    note: "9月の東京・富山にて配信業務。急な依頼のため迅速対応が必要。",
-    requests: ["見積書の緊急提出（3/19まで）", "東京・富山2会場の機材手配"],
-    pending_items: [{ done: false, text: "日程未定・9月頃" }, { done: false, text: "会場詳細調整中" }],
-    latest_summary: "YKK AP社内イベントの配信業務。東京・富山2会場同時対応。急な依頼で3/19までに見積提出要。",
-    latest_sender: "高橋直樹", latest_email_date: "2026-03-18",
-    updatedAt: "2026-03-18"
-  },
-  {
-    id: "sansan-samurai-nagoya",
-    name: "Sansan Samurai DX ＠名古屋",
-    client: "Sansan",
-    contact: "松本瞳",
-    date: "2026-02-01", prepDate: "",
-    venue: "名古屋",
-    venueDetail: "",
-    biz: "映像・音響・配信オペレーション",
-    dl: "", dlNote: "予算優先で他社決定。失注。",
-    status: "失注", estStatus: "提出済み",
-    note: "Sansan様のイベントについては今後4月情報システムCAMPで連携継続予定。スピンオフや別テーマの拡大時にも声掛けあり。",
-    requests: [],
-    pending_items: [],
-    latest_summary: "予算優先で他社に決定。失注。今後のSansan案件での連携継続予定。",
-    latest_sender: "松本瞳", latest_email_date: "2026-02-20",
-    updatedAt: "2026-03-18"
-  }
-];
-
-// ─────────────────────────────────────────
-// State
-// ─────────────────────────────────────────
-let projects = [];
+// ── グローバル変数 ────────────────────────────────────────────
+let allProjects   = [];
+let currentId     = null;
 let currentFilter = 'all';
-let currentProjectId = null;
-let currentDetailTab = 'overview';
+let currentTab    = 'overview';
 
-function loadData() {
-  try {
-    const saved = localStorage.getItem('nb_projects');
-    if (saved) {
-      projects = JSON.parse(saved);
-      // 新フィールドのマイグレーション
-      projects = projects.map(p => ({
-        requests: [], pending_items: [], latest_summary: '', latest_sender: '', latest_email_date: '',
-        ...p
-      }));
-    } else {
-      projects = JSON.parse(JSON.stringify(DEFAULT_DATA));
-      saveData();
-    }
-  } catch(e) {
-    projects = JSON.parse(JSON.stringify(DEFAULT_DATA));
-  }
-}
-
-function saveData() {
-  localStorage.setItem('nb_projects', JSON.stringify(projects));
-}
-
-// ─────────────────────────────────────────
-// Helpers
-// ─────────────────────────────────────────
+// ── ステータス→バッジ対応表 ─────────────────────────────────
 const STATUS_MAP = {
   '見積依頼受領':           'badge-blue',
   '見積作成中':             'badge-amber',
@@ -678,322 +249,290 @@ const STATUS_MAP = {
   '失注':                   'badge-gray',
 };
 
+// ── Firestore リアルタイム監視 ──────────────────────────────
+const q = query(collection(db, 'projects'), orderBy('updated_at', 'desc'));
+
+onSnapshot(q, (snapshot) => {
+  allProjects = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+  renderList();
+  if (currentId) {
+    const p = allProjects.find(x => x.id === currentId);
+    if (p) renderDetail(p);
+  } else if (allProjects.length > 0) {
+    selectProject(allProjects[0].id);
+  }
+  const now = new Date().toLocaleString('ja-JP', {month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
+  document.getElementById('syncText').textContent = '同期済 ' + now;
+  document.getElementById('syncBadge').classList.remove('sync-err');
+  document.getElementById('syncDot').style.background = 'var(--green)';
+  document.getElementById('countLabel').textContent = allProjects.length + '件';
+}, (err) => {
+  console.error('Firestore error:', err);
+  document.getElementById('syncText').textContent = '接続エラー';
+  document.getElementById('syncBadge').classList.add('sync-err');
+  document.getElementById('syncDot').style.background = 'var(--red)';
+});
+
+// ── ヘルパー関数 ──────────────────────────────────────────────
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
 function dlInfo(dl) {
-  if (!dl) return { cls: 'none', label: '—' };
+  if (!dl) return { cls:'none', label:'—' };
   const today = new Date(); today.setHours(0,0,0,0);
   const d = new Date(dl);
   const diff = Math.ceil((d - today) / 86400000);
-  const label = dl.replace(/-/g, '/').replace('/2026', '').replace('2026/', '');
-  if (diff < 0)   return { cls: 'overdue', label: label + '（超過）' };
-  if (diff === 0) return { cls: 'near',    label: label + '（本日！）' };
-  if (diff <= 7)  return { cls: 'near',    label: label + '（あと' + diff + '日）' };
-  return { cls: 'ok', label: label };
+  const label = (d.getMonth()+1) + '/' + d.getDate();
+  if (diff < 0)   return { cls:'overdue', label: label + '（超過）' };
+  if (diff === 0) return { cls:'near',    label: label + '（本日!）' };
+  if (diff <= 7)  return { cls:'near',    label: label + '（あと' + diff + '日）' };
+  return { cls:'ok', label };
 }
 
 function fmtDateLong(d) {
-  if (!d) return '';
-  try {
-    return new Date(d).toLocaleDateString('ja-JP', { month: 'long', day: 'numeric', weekday: 'short' });
-  } catch(e) { return d; }
+  if (!d) return null;
+  const dt = new Date(d);
+  const w = ['日','月','火','水','木','金','土'][dt.getDay()];
+  return (dt.getMonth()+1) + '月' + dt.getDate() + '日（' + w + '）';
 }
 
-function esc(s) {
-  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-function toast(msg) {
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.classList.add('show');
-  setTimeout(() => el.classList.remove('show'), 2500);
-}
-
-// ─────────────────────────────────────────
-// List
-// ─────────────────────────────────────────
-function setFilter(f, btn) {
+// ── 左ペイン：案件リスト描画 ────────────────────────────────
+window.setFilter = (f, btn) => {
   currentFilter = f;
   document.querySelectorAll('.ftab').forEach(t => t.classList.remove('on'));
   btn.classList.add('on');
   renderList();
-}
+};
 
-function renderList() {
-  const q = (document.getElementById('listSearch')?.value || '').toLowerCase();
-  const list = projects.filter(p => {
+window.renderList = () => {
+  const q = document.getElementById('listSearch')?.value.toLowerCase() || '';
+  const list = allProjects.filter(p => {
     const isLost = p.status === '失注';
     if (currentFilter === 'active' && isLost) return false;
     if (currentFilter === 'lost'   && !isLost) return false;
     if (q) {
-      const s = ((p.name||'') + (p.client||'') + (p.venue||'')).toLowerCase();
+      const s = ((p.project_name||'') + (p.client||'')).toLowerCase();
       if (!s.includes(q)) return false;
     }
     return true;
   });
 
-  document.getElementById('countLabel').textContent = list.length + '件';
-
   const wrap = document.getElementById('rowsWrap');
   if (!list.length) {
-    wrap.innerHTML = '<div class="empty">該当する案件がありません</div>';
+    wrap.innerHTML = '<div class="detail-empty">該当する案件がありません</div>';
     return;
   }
 
   wrap.innerHTML = list.map(p => {
-    const sc = STATUS_MAP[p.status] || 'badge-gray';
+    const sc   = STATUS_MAP[p.status] || 'badge-gray';
     const isLost = p.status === '失注';
-    return `<div class="row${p.id === currentProjectId ? ' sel' : ''}${isLost ? ' lost' : ''}"
-              onclick="selectProject('${esc(p.id)}')">
-      <div class="row-name">${esc(p.name || '（案件名不明）')}</div>
+    return `<div class="row${p.id === currentId?' sel':''}${isLost?' lost':''}" onclick="selectProject('${esc(p.id)}')">
+      <div class="row-name">${esc(p.project_name || p.email_subject || '（案件名不明）')}</div>
       <div class="row-sub">
-        <span class="row-client">${esc(p.client||'—')}</span>
-        <span class="badge ${sc}" style="font-size:10px;padding:1px 7px">${esc(p.status||'不明')}</span>
+        <span class="row-client">${esc(p.client||'—')}${p.contact?' / '+esc(p.contact):''}</span>
+        <span class="badge ${sc}" style="font-size:10px;padding:1px 8px">${esc(p.status||'不明')}</span>
       </div>
     </div>`;
   }).join('');
-}
+};
 
-function selectProject(id) {
-  currentProjectId = id;
-  const p = projects.find(x => x.id === id);
-  if (!p) return;
-  renderList();
-  renderDetail(p);
-}
+// ── 案件選択 ──────────────────────────────────────────────────
+window.selectProject = (id) => {
+  currentId = id;
+  const p = allProjects.find(x => x.id === id);
+  if (p) { renderList(); renderDetail(p); }
+};
 
-// ─────────────────────────────────────────
-// Detail
-// ─────────────────────────────────────────
+// ── 右ペイン：詳細描画 ──────────────────────────────────────
 function renderDetail(p) {
   const sc = STATUS_MAP[p.status] || 'badge-gray';
-  const di = dlInfo(p.dl);
-  const mainDate = fmtDateLong(p.date);
-  const prepDate = fmtDateLong(p.prepDate);
+  const di = dlInfo(p.estimate_deadline);
+  const mainDate = fmtDateLong(p.event_date);
+  const prepDate = fmtDateLong(p.prep_date);
 
-  document.getElementById('detailTitle').textContent = p.name || '案件詳細';
+  document.getElementById('detailTitle').textContent = p.project_name || p.email_subject || '案件詳細';
   document.getElementById('detailMeta').innerHTML =
     `<span class="badge ${sc}">${esc(p.status||'不明')}</span>` +
-    (p.dl ? `<span class="badge ${di.cls==='overdue'?'badge-red':di.cls==='near'?'badge-amber':'badge-gray'}">見積期限: ${esc(di.label)}</span>` : '') +
-    `<button class="btn btn-ghost" style="padding:3px 10px;font-size:11px;margin-left:8px" onclick="openEdit('${esc(p.id)}')">編集</button>`;
+    (p.estimate_deadline
+      ? `<span class="badge ${di.cls==='overdue'?'badge-red':di.cls==='near'?'badge-amber':'badge-gray'}">見積期限: ${esc(di.label)}</span>`
+      : '');
 
-  // 概要タブ
+  // ── 概要 ────────────────────────────────────────────────────
   document.getElementById('dpane-overview').innerHTML = `
     <div class="info-grid">
       <div><div class="info-lbl">クライアント</div><div class="info-val">${esc(p.client||'—')}</div></div>
       <div><div class="info-lbl">NB担当者</div><div class="info-val">${esc(p.contact||'—')}</div></div>
-      <div><div class="info-lbl">本番日</div><div class="info-val mono">${mainDate ? esc(mainDate) : '未定'}</div></div>
-      <div><div class="info-lbl">準備日</div><div class="info-val mono">${prepDate ? esc(prepDate) : '—'}</div></div>
+      <div><div class="info-lbl">本番日</div><div class="info-val mono">${mainDate?esc(mainDate):'未定'}</div></div>
+      <div><div class="info-lbl">準備日</div><div class="info-val mono">${prepDate?esc(prepDate):'—'}</div></div>
     </div>
     <div style="margin-bottom:14px">
       <div class="info-lbl" style="margin-bottom:4px">会場</div>
       <div class="info-val" style="white-space:pre-wrap">${esc(p.venue||'—')}</div>
-      ${p.venueDetail ? `<div style="font-size:12px;color:var(--text3);margin-top:4px;white-space:pre-wrap">${esc(p.venueDetail)}</div>` : ''}
+      ${p.venue_detail?`<div style="font-size:12px;color:var(--text3);margin-top:4px">${esc(p.venue_detail)}</div>`:''}
     </div>
     <div>
       <div class="info-lbl" style="margin-bottom:4px">業務内容</div>
-      <div class="biz-box">${esc(p.biz||'—')}</div>
+      <div class="biz-box">${esc(p.business_content||'—')}</div>
     </div>
-    ${p.note ? `<div style="margin-top:14px"><div class="info-lbl" style="margin-bottom:4px">メモ・特記事項</div><div class="biz-box" style="color:var(--text2)">${esc(p.note)}</div></div>` : ''}`;
-
-  // 依頼事項タブ
-  const reqs = p.requests || [];
-  document.getElementById('dpane-requests').innerHTML = reqs.length
-    ? `<div class="item-list">${reqs.map(r =>
-        `<div class="item req"><span class="item-icon">▶</span><span>${esc(r)}</span></div>`
-      ).join('')}</div>`
-    : '<div class="empty">依頼事項は抽出されていません</div>';
-
-  // 確認事項タブ
-  const pendings = p.pending_items || [];
-  document.getElementById('dpane-pending').innerHTML = pendings.length
-    ? `<div class="item-list">${pendings.map(item => {
-        const done = typeof item === 'object' ? item.done : false;
-        const text = typeof item === 'object' ? item.text : item;
-        return `<div class="item ${done ? 'done' : 'pend'}">
-          <span class="item-icon">${done ? '✓' : '◈'}</span>
-          <span>${esc(text)}</span>
-        </div>`;
-      }).join('')}</div>`
-    : '<div class="empty">未確認事項はありません ✓</div>';
-
-  // メール要約タブ
-  document.getElementById('dpane-summary').innerHTML = `
-    <div class="sum-box">
-      <div class="sum-meta">${esc(p.latest_sender||p.contact||'—')} · ${esc(p.latest_email_date||p.updatedAt||'—')} · 最新メール</div>
-      <div class="sum-txt">${esc(p.latest_summary || p.dlNote || '要約情報がありません')}</div>
+    ${p.note?`<div style="margin-top:14px"><div class="info-lbl" style="margin-bottom:4px">メモ</div><div style="font-size:12px;color:var(--text2);white-space:pre-wrap">${esc(p.note)}</div></div>`:''}
+    <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border-l);display:flex;justify-content:flex-end">
+      <button class="btn btn-primary" onclick="openEdit('${esc(p.id)}')">編集する</button>
     </div>`;
 
-  switchDetailTabTo(currentDetailTab);
+  // ── 依頼事項 ─────────────────────────────────────────────────
+  const reqs = Array.isArray(p.requests) ? p.requests : [];
+  document.getElementById('dpane-requests').innerHTML = reqs.length
+    ? `<div class="item-list">${reqs.map(r =>
+        `<div class="item req"><span class="item-icon">▶</span><span>${esc(typeof r==='object'?r.text:r)}</span></div>`
+      ).join('')}</div>`
+    : `<div class="empty-items">依頼事項はまだ抽出されていません。<br>メールが同期されると自動で表示されます。</div>`;
+
+  // ── 確認事項 ─────────────────────────────────────────────────
+  const pendings = Array.isArray(p.pending_items) ? p.pending_items : [];
+  document.getElementById('dpane-pending').innerHTML = pendings.length
+    ? `<div class="item-list">${pendings.map(item => {
+        const done = typeof item === 'object' ? !!item.done : false;
+        const text = typeof item === 'object' ? item.text  : item;
+        return `<div class="item ${done?'done':'pend'}"><span class="item-icon">${done?'✓':'◈'}</span><span>${esc(text)}</span></div>`;
+      }).join('')}</div>`
+    : `<div class="empty-items">未確認事項はありません ✓</div>`;
+
+  // ── メール要約 ───────────────────────────────────────────────
+  const hist = Array.isArray(p.email_history) ? p.email_history : [];
+  document.getElementById('dpane-summary').innerHTML = `
+    <div class="sum-box">
+      <div class="sum-meta">${esc(p.latest_sender||p.contact||'—')} · ${esc(p.latest_email_date||p.synced_at?.slice(0,10)||'—')} · 最新メール</div>
+      <div class="sum-txt">${esc(p.latest_summary||p.email_subject||'要約情報がありません')}</div>
+    </div>
+    ${hist.length ? `<div class="hist-title">過去のやりとり</div><div class="hist-list">${hist.map(h =>
+      `<div class="hist-row"><span class="hist-date">${esc(h.date||'')}</span><span class="hist-text">${esc(h.text||'')}</span></div>`
+    ).join('')}</div>` : ''}`;
+
+  switchDetailTabTo(currentTab);
 }
 
-function switchDetailTab(name, btn) {
-  currentDetailTab = name;
+// ── タブ切り替え ─────────────────────────────────────────────
+window.switchDetailTab = (name, btn) => {
+  currentTab = name;
   document.querySelectorAll('.dtab').forEach(t => t.classList.remove('on'));
   btn.classList.add('on');
   switchDetailTabTo(name);
-}
-
+};
 function switchDetailTabTo(name) {
   ['overview','requests','pending','summary'].forEach(t => {
-    document.getElementById('dpane-' + t)?.classList.toggle('on', t === name);
+    document.getElementById('dpane-'+t)?.classList.toggle('on', t===name);
   });
 }
 
-// ─────────────────────────────────────────
-// Edit Modal
-// ─────────────────────────────────────────
-function openEdit(id) {
-  const p = id ? (projects.find(x => x.id === id) || {}) : {};
-  document.getElementById('editTitle').textContent = p.id ? '案件を編集' : '新規案件作成';
-  renderEditForm(p);
-  document.getElementById('editModal').classList.add('open');
-}
-
-function renderEditForm(p) {
+// ── 編集モーダル ─────────────────────────────────────────────
+window.openEdit = (id) => {
+  const p = id ? (allProjects.find(x => x.id === id) || {}) : {};
+  document.getElementById('editTitle').textContent = id ? '案件を編集' : '新規案件作成';
   const statuses = ['見積依頼受領','見積作成中','詳細確認中','見積提出済み・引合い中','受注済み・準備中','失注'];
-  const estStatuses = ['未提出','提出済み','採択','失注'];
-  const statusOpts = statuses.map(s => `<option value="${s}" ${p.status===s?'selected':''}>${s}</option>`).join('');
-  const estOpts = estStatuses.map(s => `<option value="${s}" ${(p.estStatus||'未提出')===s?'selected':''}>${s}</option>`).join('');
-
+  const sOpts = statuses.map(s => `<option value="${s}"${p.status===s?' selected':''}>${s}</option>`).join('');
   document.getElementById('editBody').innerHTML = `
     <div class="form-grid">
       <div class="form-group" style="grid-column:1/-1">
         <label class="form-label">案件名 *</label>
-        <input class="form-input" id="f-name" value="${esc(p.name||'')}" placeholder="例: RSJ Technology Symposium 2026">
+        <input class="form-input" id="f-name" value="${esc(p.project_name||'')}" placeholder="例: RSJ Technology Symposium 2026">
       </div>
       <div class="form-group">
-        <label class="form-label">エンドクライアント</label>
-        <input class="form-input" id="f-client" value="${esc(p.client||'')}" placeholder="例: ローデ・シュワルツ・ジャパン">
+        <label class="form-label">クライアント</label>
+        <input class="form-input" id="f-client" value="${esc(p.client||'')}">
       </div>
       <div class="form-group">
         <label class="form-label">NB担当者</label>
-        <input class="form-input" id="f-contact" value="${esc(p.contact||'')}" placeholder="例: 瀬津幸太">
+        <input class="form-input" id="f-contact" value="${esc(p.contact||'')}">
       </div>
       <div class="form-group">
-        <label class="form-label">開催日</label>
-        <input class="form-input" id="f-date" type="date" value="${p.date||''}">
+        <label class="form-label">本番日</label>
+        <input class="form-input" id="f-date" type="date" value="${p.event_date||''}">
       </div>
       <div class="form-group">
         <label class="form-label">準備日</label>
-        <input class="form-input" id="f-prepDate" type="date" value="${p.prepDate||''}">
+        <input class="form-input" id="f-prep" type="date" value="${p.prep_date||''}">
       </div>
       <div class="form-group" style="grid-column:1/-1">
         <label class="form-label">会場</label>
-        <input class="form-input" id="f-venue" value="${esc(p.venue||'')}" placeholder="例: 赤坂インターシティコンファレンス">
-      </div>
-      <div class="form-group" style="grid-column:1/-1">
-        <label class="form-label">会場詳細・拘束時間</label>
-        <input class="form-input" id="f-venueDetail" value="${esc(p.venueDetail||'')}" placeholder="例: 6会場構成、拘束 9:00〜21:00">
+        <input class="form-input" id="f-venue" value="${esc(p.venue||'')}">
       </div>
       <div class="form-group" style="grid-column:1/-1">
         <label class="form-label">業務内容</label>
-        <textarea class="form-textarea" id="f-biz" placeholder="例: 進行D×6・AD×12、収録（カメラ×6）">${esc(p.biz||'')}</textarea>
+        <textarea class="form-textarea" id="f-biz">${esc(p.business_content||'')}</textarea>
       </div>
       <div class="form-group">
         <label class="form-label">見積提出期限</label>
-        <input class="form-input" id="f-dl" type="date" value="${p.dl||''}">
+        <input class="form-input" id="f-dl" type="date" value="${p.estimate_deadline||''}">
       </div>
       <div class="form-group">
-        <label class="form-label">見積ステータス</label>
-        <select class="form-select" id="f-estStatus">${estOpts}</select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">ステータス *</label>
-        <select class="form-select" id="f-status">${statusOpts}</select>
+        <label class="form-label">ステータス</label>
+        <select class="form-select" id="f-status">${sOpts}</select>
       </div>
       <div class="form-group" style="grid-column:1/-1">
-        <label class="form-label">見積備考</label>
-        <input class="form-input" id="f-dlNote" value="${esc(p.dlNote||'')}" placeholder="例: 先方提案日 3/27のため24〜25日中に提出">
-      </div>
-      <div class="form-group" style="grid-column:1/-1">
-        <label class="form-label">メモ・特記事項</label>
-        <textarea class="form-textarea" id="f-note" placeholder="社内メモ、特記事項など">${esc(p.note||'')}</textarea>
+        <label class="form-label">メモ</label>
+        <textarea class="form-textarea" id="f-note">${esc(p.note||'')}</textarea>
       </div>
     </div>
     <div class="form-footer">
-      ${p.id ? `<button class="btn btn-ghost" style="color:var(--red);border-color:var(--red)" onclick="deleteProject('${esc(p.id)}')">削除</button>` : ''}
       <button class="btn btn-ghost" onclick="closeModal('editModal')">キャンセル</button>
-      <button class="btn btn-primary" onclick="saveEdit('${esc(p.id||'')}')">保存する</button>
+      <button class="btn btn-primary" onclick="saveEdit('${esc(id||'')}')">保存する</button>
     </div>`;
-}
+  document.getElementById('editModal').classList.add('open');
+};
 
-function saveEdit(id) {
-  const get = i => document.getElementById(i).value.trim();
-  const name = get('f-name');
+window.saveEdit = async (id) => {
+  const g = i => document.getElementById(i)?.value.trim() || '';
+  const name = g('f-name');
   if (!name) { alert('案件名は必須です'); return; }
-  const now = new Date().toLocaleDateString('ja-JP',{year:'numeric',month:'2-digit',day:'2-digit'}).replace(/\//g,'-');
-
-  if (id) {
-    const idx = projects.findIndex(p => p.id === id);
-    if (idx >= 0) {
-      projects[idx] = { ...projects[idx], name, client: get('f-client'), contact: get('f-contact'),
-        date: get('f-date'), prepDate: get('f-prepDate'), venue: get('f-venue'), venueDetail: get('f-venueDetail'),
-        biz: get('f-biz'), dl: get('f-dl'), dlNote: get('f-dlNote'),
-        status: get('f-status'), estStatus: get('f-estStatus'), note: get('f-note'), updatedAt: now };
+  const data = {
+    project_name:      name,
+    client:            g('f-client'),
+    contact:           g('f-contact'),
+    event_date:        g('f-date') || null,
+    prep_date:         g('f-prep') || null,
+    venue:             g('f-venue'),
+    business_content:  g('f-biz'),
+    estimate_deadline: g('f-dl') || null,
+    status:            g('f-status'),
+    note:              g('f-note'),
+    updated_at:        new Date().toISOString(),
+    manually_edited:   true
+  };
+  try {
+    if (id) {
+      await updateDoc(doc(db, 'projects', id), data);
+    } else {
+      await addDoc(collection(db, 'projects'), data);
     }
-  } else {
-    const newId = 'proj-' + Date.now();
-    projects.push({ id: newId, name, client: get('f-client'), contact: get('f-contact'),
-      date: get('f-date'), prepDate: get('f-prepDate'), venue: get('f-venue'), venueDetail: get('f-venueDetail'),
-      biz: get('f-biz'), dl: get('f-dl'), dlNote: get('f-dlNote'),
-      status: get('f-status'), estStatus: get('f-estStatus'), note: get('f-note'),
-      requests: [], pending_items: [], latest_summary: '', latest_sender: '', latest_email_date: '',
-      updatedAt: now });
-    currentProjectId = newId;
+    closeModal('editModal');
+    showToast('✓ 保存しました');
+  } catch(e) {
+    console.error(e);
+    alert('保存に失敗しました: ' + e.message);
   }
+};
 
-  saveData();
-  closeModal('editModal');
-  renderList();
-  const p = projects.find(x => x.id === (id || currentProjectId));
-  if (p) renderDetail(p);
-  toast('✓ 保存しました');
-}
-
-function deleteProject(id) {
-  if (!confirm('この案件を削除しますか？')) return;
-  projects = projects.filter(p => p.id !== id);
-  if (currentProjectId === id) {
-    currentProjectId = null;
-    document.getElementById('detailTitle').textContent = '案件を選択してください';
-    document.getElementById('detailMeta').innerHTML = '';
-    document.getElementById('dpane-overview').innerHTML = '<div class="empty">左の一覧から案件を選択してください</div>';
-    ['requests','pending','summary'].forEach(t => { document.getElementById('dpane-'+t).innerHTML = ''; });
-  }
-  saveData();
-  closeModal('editModal');
-  renderList();
-  toast('削除しました');
-}
-
-// ─────────────────────────────────────────
-// Modal helpers
-// ─────────────────────────────────────────
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-function closeModalOutside(e, id) { if (e.target === document.getElementById(id)) closeModal(id); }
-
-// ─────────────────────────────────────────
-// CSV Export
-// ─────────────────────────────────────────
-function exportCSV() {
-  const headers = ['案件名','エンドクライアント','担当者','開催日','準備日','会場','業務内容','見積提出期限','見積ステータス','ステータス','メモ'];
-  const rows = projects.map(p => [
-    p.name, p.client, p.contact, p.date, p.prepDate, p.venue, p.biz, p.dl, p.estStatus, p.status, p.note
+// ── CSV出力 ───────────────────────────────────────────────────
+window.exportCSV = () => {
+  const headers = ['案件名','クライアント','担当者','本番日','準備日','会場','業務内容','見積期限','ステータス','メモ'];
+  const rows = allProjects.map(p => [
+    p.project_name, p.client, p.contact, p.event_date, p.prep_date,
+    p.venue, p.business_content, p.estimate_deadline, p.status, p.note
   ].map(v => '"' + String(v||'').replace(/"/g,'""') + '"'));
   const csv = '\uFEFF' + [headers, ...rows].map(r => r.join(',')).join('\n');
   const a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
-  a.download = 'newsbase-projects-' + new Date().toISOString().slice(0,10) + '.csv';
+  a.href = URL.createObjectURL(new Blob([csv], { type:'text/csv;charset=utf-8' }));
+  a.download = 'newsbase-' + new Date().toISOString().slice(0,10) + '.csv';
   a.click();
-  toast('✓ CSVを出力しました');
-}
+  showToast('✓ CSVを出力しました');
+};
 
-// ─────────────────────────────────────────
-// Init
-// ─────────────────────────────────────────
-loadData();
-renderList();
-if (projects.length > 0) selectProject(projects[0].id);
+// ── モーダル・トースト ────────────────────────────────────────
+window.closeModal = (id) => document.getElementById(id)?.classList.remove('open');
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2500);
+}
 </script>
 </body>
 </html>
