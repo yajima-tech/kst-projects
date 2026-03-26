@@ -168,8 +168,8 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg2);color:var(--tex
         <span style="font-size:11px;color:var(--text3)" id="countLabel">—</span>
       </div>
       <div class="filter-tabs">
-        <button class="ftab on" onclick="setFilter('all',this)">すべて</button>
-        <button class="ftab" onclick="setFilter('active',this)">進行中</button>
+        <button class="ftab" onclick="setFilter('all',this)">すべて</button>
+        <button class="ftab on" onclick="setFilter('active',this)">進行中</button>
         <button class="ftab" onclick="setFilter('lost',this)">失注</button>
       </div>
       <div class="list-search">
@@ -236,7 +236,7 @@ const db  = getFirestore(app);
 // ── グローバル変数 ────────────────────────────────────────────
 let allProjects   = [];
 let currentId     = null;
-let currentFilter = 'all';
+let currentFilter = 'active';
 let currentTab    = 'overview';
 
 // ── ステータス→バッジ対応表 ─────────────────────────────────
