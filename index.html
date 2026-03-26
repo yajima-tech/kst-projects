@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ニューズベース 案件管理</title>
+<title>KST 案件管理</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -147,8 +147,8 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg2);color:var(--tex
 <header class="header">
   <div class="header-inner">
     <a class="logo" href="#">
-      <div class="logo-mark">NB</div>
-      <span class="logo-text">ニューズベース案件管理</span>
+      <div class="logo-mark">KST</div>
+      <span class="logo-text">案件管理</span>
     </a>
     <div class="header-actions">
       <span class="sync-badge" id="syncBadge"><span class="sync-dot" id="syncDot"></span><span id="syncText">接続中...</span></span>
@@ -171,6 +171,11 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg2);color:var(--tex
         <button class="ftab" onclick="setFilter('all',this)">すべて</button>
         <button class="ftab on" onclick="setFilter('active',this)">進行中</button>
         <button class="ftab" onclick="setFilter('lost',this)">失注</button>
+      </div>
+      <div class="filter-tabs" style="padding-top:0;border-bottom:none;padding-bottom:6px">
+        <button class="ftab on" id="ftab-all-co" onclick="setCompany('all',this)">全社</button>
+        <button class="ftab" id="ftab-nb" onclick="setCompany('nb',this)">ニューズベース</button>
+        <button class="ftab" id="ftab-gl" onclick="setCompany('gl',this)">グラムリンク</button>
       </div>
       <div class="list-search">
         <input type="text" placeholder="案件名・クライアントで検索..." id="listSearch" oninput="renderList()">
@@ -239,6 +244,14 @@ const db  = getFirestore(app);
 let allProjects   = [];
 let currentId     = null;
 let currentFilter = 'active';
+let currentCompany = 'all'; // 'all' | 'nb' | 'gl'
+
+window.setCompany = (c, btn) => {
+  currentCompany = c;
+  document.querySelectorAll('#ftab-all-co,#ftab-nb,#ftab-gl').forEach(t => t.classList.remove('on'));
+  btn.classList.add('on');
+  renderList();
+};
 let currentTab    = 'overview';
 
 // ── ステータス→バッジ対応表 ─────────────────────────────────
@@ -317,8 +330,11 @@ window.renderList = () => {
   const q = document.getElementById('listSearch')?.value.toLowerCase() || '';
   const list = allProjects.filter(p => {
     const isLost = p.status === '失注';
-    if (currentFilter === 'active' && isLost) return false;
+    if (currentFilter === 'active' && isLost)  return false;
     if (currentFilter === 'lost'   && !isLost) return false;
+    const isGL = p.id && p.id.startsWith('gl_');
+    if (currentCompany === 'nb' && isGL)  return false;
+    if (currentCompany === 'gl' && !isGL) return false;
     if (q) {
       const s = ((p.project_name||'') + (p.client||'')).toLowerCase();
       if (!s.includes(q)) return false;
@@ -332,17 +348,38 @@ window.renderList = () => {
     return;
   }
 
-  wrap.innerHTML = list.map(p => {
-    const sc   = STATUS_MAP[p.status] || 'badge-gray';
-    const isLost = p.status === '失注';
-    return `<div class="row${p.id === currentId?' sel':''}${isLost?' lost':''}" onclick="selectProject('${esc(p.id)}')">
-      <div class="row-name">${esc(p.project_name || p.email_subject || '（案件名不明）')}</div>
-      <div class="row-sub">
-        <span class="row-client">${esc(p.client||'—')}${p.contact?' / '+esc(p.contact):''}</span>
-        <span class="badge ${sc}" style="font-size:10px;padding:1px 8px">${esc(p.status||'不明')}</span>
-      </div>
-    </div>`;
-  }).join('');
+  // 会社別にグループ分け
+  const nbList = list.filter(p => !(p.id && p.id.startsWith('gl_')));
+  const glList = list.filter(p =>   p.id && p.id.startsWith('gl_'));
+
+  function makeRows(arr) {
+    return arr.map(p => {
+      const sc     = STATUS_MAP[p.status] || 'badge-gray';
+      const isLost = p.status === '失注';
+      return `<div class="row${p.id===currentId?' sel':''}${isLost?' lost':''}" onclick="selectProject('${esc(p.id)}')">
+        <div class="row-name">${esc(p.project_name||p.email_subject||'（案件名不明）')}</div>
+        <div class="row-sub">
+          <span class="row-client">${esc(p.client||'—')}${p.contact?' / '+esc(p.contact):''}</span>
+          <span class="badge ${sc}" style="font-size:10px;padding:1px 8px">${esc(p.status||'不明')}</span>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  function makeSection(label, color, arr) {
+    if (arr.length === 0) return '';
+    return `<div style="padding:8px 14px 4px;font-size:10px;font-weight:600;color:${color};letter-spacing:.06em;text-transform:uppercase;border-bottom:0.5px solid var(--border-l)">${label} <span style="font-weight:400;opacity:.7">${arr.length}件</span></div>`
+      + makeRows(arr);
+  }
+
+  const showAll = currentCompany === 'all';
+  wrap.innerHTML =
+    (showAll || currentCompany === 'nb' ? makeSection('ニューズベース', '#2563eb', nbList) : '') +
+    (showAll || currentCompany === 'gl' ? makeSection('グラムリンク',   '#7c3aed', glList) : '');
+
+  if (!wrap.innerHTML) {
+    wrap.innerHTML = '<div class="detail-empty">該当する案件がありません</div>';
+  }
 };
 
 // ── 案件選択 ──────────────────────────────────────────────────
@@ -370,7 +407,7 @@ function renderDetail(p) {
   document.getElementById('dpane-overview').innerHTML = `
     <div class="info-grid">
       <div><div class="info-lbl">クライアント</div><div class="info-val">${esc(p.client||'—')}</div></div>
-      <div><div class="info-lbl">NB担当者</div><div class="info-val">${esc(p.contact||'—')}</div></div>
+      <div><div class="info-lbl">担当者</div><div class="info-val">${esc(p.contact||'—')}</div></div>
       <div><div class="info-lbl">本番日</div><div class="info-val mono">${mainDate?esc(mainDate):'未定'}</div></div>
       <div><div class="info-lbl">準備日</div><div class="info-val mono">${prepDate?esc(prepDate):'—'}</div></div>
     </div>
@@ -524,7 +561,7 @@ window.openEdit = (id) => {
         <input class="form-input" id="f-client" value="${esc(p.client||'')}">
       </div>
       <div class="form-group">
-        <label class="form-label">NB担当者</label>
+        <label class="form-label">担当者</label>
         <input class="form-input" id="f-contact" value="${esc(p.contact||'')}">
       </div>
       <div class="form-group">
